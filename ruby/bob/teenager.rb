@@ -1,53 +1,53 @@
 class NothingResponse
-  def response
+  def self.accept_message?(message)
+    message.empty?
+  end
+
+  def self.answer
     'Fine. Be that way.'
   end
 end
 
 class YellingResponse
-  def response
+  def self.accept_message?(message)
+    message.upcase == message
+  end
+
+  def self.answer
     "Woah, chill out!"
   end
 end
 
 class DefaultResponse
-  def response
+
+  def self.accept_message?(message)
+    true
+  end
+
+  def self.answer
     "Whatever."
   end
 end
 
 class QuestionResponse
-  def response
+  def self.accept_message?(message)
+    message[-1] == '?'
+  end
+
+  def self.answer
     "Sure."
   end
 end
 
 module LackadaisicalTeenager
+
+  RESPONSES = [NothingResponse, YellingResponse, QuestionResponse, DefaultResponse]
+
   def respond(message)
-    if nothing?(message)
-      response =  NothingResponse.new.response
-    elsif yelling?(message)
-      response = YellingResponse.new.response
-    elsif question?(message)
-      response = QuestionResponse.new.response
-    else
-      response = DefaultResponse.new.response
-    end
 
-    response
+    response = RESPONSES.find { | response | response.accept_message?(message) }
+    response.answer
 
-  end
-
-  def nothing?(message)
-    message.empty?
-  end
-
-  def yelling?(message)
-    message.upcase == message
-  end
-
-  def question?(message)
-    message[-1] == '?'
   end
 
 end
