@@ -1,52 +1,61 @@
-class NothingResponse
-  def self.accept_message?(message)
-    message.empty?
+module LackadaisicalTeenager
+
+  class NothingUtterance
+    def self.accept?(message)
+      message.empty?
+    end
+
+    def self.reply
+      'Fine. Be that way.'
+    end
   end
 
-  def self.answer
-    'Fine. Be that way.'
-  end
-end
+  class YellingUtterance
+    def self.accept?(message)
+      message.upcase == message
+    end
 
-class YellingResponse
-  def self.accept_message?(message)
-    message.upcase == message
-  end
-
-  def self.answer
-    "Woah, chill out!"
-  end
-end
-
-class DefaultResponse
-
-  def self.accept_message?(message)
-    true
+    def self.reply
+      "Woah, chill out!"
+    end
   end
 
-  def self.answer
-    "Whatever."
-  end
-end
+  class QuestionUtterance
+    def self.accept?(message)
+      message[-1] == '?'
+    end
 
-class QuestionResponse
-  def self.accept_message?(message)
-    message[-1] == '?'
+    def self.reply
+      "Sure."
+    end
   end
 
-  def self.answer
-    "Sure."
+  class UnknownUtterance
+
+    def self.accept?(message)
+      true
+    end
+
+    def self.reply
+      "Whatever."
+    end
   end
+
+
 end
 
 module LackadaisicalTeenager
 
-  RESPONSES = [NothingResponse, YellingResponse, QuestionResponse, DefaultResponse]
+  UTTERANCES = [NothingUtterance, YellingUtterance, QuestionUtterance, UnknownUtterance]
+
+  def utterances
+    UTTERANCES
+  end
 
   def respond(message)
 
-    response = RESPONSES.find { | response | response.accept_message?(message) }
-    response.answer
+    utterance = utterances.find { | u | u.accept?(message) }
+    utterance.reply
 
   end
 
@@ -58,4 +67,5 @@ class Bob
   def hey(message)
     respond(message)
   end
+
 end
